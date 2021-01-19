@@ -2,12 +2,12 @@
 import cv2
 import numpy as np
 
-import FaceFeatureDetection, ModelFactory, ImageFeatureDraw
+import FaceFeatureDetection, ModelFactory, ImageFeatureDraw, FeatureProcessing
 
 face_model = ModelFactory.get_face_detector(modelFile="models/res10_300x300_ssd_iter_140000.caffemodel",
                                             configFile="models/deploy.prototxt")
 
-landmark_model = FaceFeatureDetection.get_landmark_model()
+landmark_model = ModelFactory.get_landmark_model('models/pose_model')
 
 # Loads the video capture
 cap = cv2.VideoCapture(0)
@@ -49,14 +49,31 @@ while True:
 
             image_points = np.array([
                 marks[30],  # Nose tip
-                marks[8],  # Chin
+                marks[8],   # Chin
                 marks[36],  # Left eye left corner
                 marks[45],  # Right eye right corne
                 marks[48],  # Left Mouth corner
-                marks[54]  # Right mouth corner
+                marks[54]   # Right mouth corner
             ], dtype="double")
 
-            # Not sure what this does
-            dist_coeffs = np.zeros((4, 1))  # Assuming no lens distortion
+            # Not sure what solvePnP does
+            dist_coeffs = np.zeros((4, 1))
             (success, rotation_vector, translation_vector) = cv2.solvePnP(model_points, image_points, camera_matrix,
                                                                           dist_coeffs, flags=cv2.SOLVEPNP_UPNP)
+
+
+            x1, x2 = FaceFeatureDetection.head_pose_points(img, rotation_vector, translation_vector, camera_matrix)
+
+            # Calculates the nose end point for the line.
+            (x_angle, y_angle) = FeatureProcessing.get_look_angles(image_points[0], rotation_vector, translation_vector,
+                                                                   camera_matrix, dist_coeffs, x1, x2)
+
+            print(f'(x: {x_angle}, y: {y_angle})')
+
+        cv2.imshow('img', img)
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+    else:
+        break
+cv2.destroyAllWindows()
+cap.release()

@@ -1,4 +1,5 @@
 import cv2
+from tensorflow import keras
 
 
 def get_face_detector(modelFile=None,
@@ -34,4 +35,24 @@ def get_face_detector(modelFile=None,
         if configFile is None:
             configFile = "models/deploy.prototxt"
         model = cv2.dnn.readNetFromCaffe(configFile, modelFile)
+    return model
+
+def get_landmark_model(saved_model='models/pose_model'):
+    """
+    Get the facial landmark model.
+    Original repository: https://github.com/yinguobing/cnn-facial-landmark
+
+    Parameters
+    ----------
+    saved_model : string, optional
+        Path to facial landmarks model. The default is 'models/pose_model'.
+
+    Returns
+    -------
+    model : Tensorflow model
+        Facial landmarks model
+
+    """
+    print(saved_model)
+    model = keras.models.load_model(saved_model)
     return model
