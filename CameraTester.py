@@ -7,8 +7,6 @@ import FaceFeatureDetection, ModelFactory, ImageFeatureDraw, FeatureProcessing
 face_model = ModelFactory.get_face_detector(modelFile="models/res10_300x300_ssd_iter_140000.caffemodel",
                                             configFile="models/deploy.prototxt")
 
-landmark_model = ModelFactory.get_landmark_model('models/pose_model')
-
 # Loads the video capture
 cap = cv2.VideoCapture(0)
 ret, img = cap.read()
@@ -40,12 +38,15 @@ while True:
     if ret == True:
         # Faces is a list of tuples which are the bounding box of the detected face
         faces = FaceFeatureDetection.find_faces(img, face_model)
+        # Draws a bounding box around each face
+        ImageFeatureDraw.draw_faces(img, faces)
         for face in faces:
-            # Draws a bounding box around each face
-            ImageFeatureDraw.draw_faces(img, faces)
-
             # Returns an array of all the features. I'm not sure what all of them are other than the ones stored in image_points
-            marks = FaceFeatureDetection.detect_marks(img, landmark_model, face)
+            marks = FaceFeatureDetection.detect_marks(img, face, 'models/pose_model')
+
+            # Draws all of the marks collected by the model on the image
+            # ImageFeatureDraw.draw_all_marks(img, marks);
+
 
             image_points = np.array([
                 marks[30],  # Nose tip

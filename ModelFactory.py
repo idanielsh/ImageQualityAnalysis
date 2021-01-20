@@ -53,6 +53,5 @@ def get_landmark_model(saved_model='models/pose_model'):
         Facial landmarks model
 
     """
-    print(saved_model)
     model = keras.models.load_model(saved_model)
     return model
