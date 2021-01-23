@@ -1,6 +1,7 @@
 # This class will launch your camera and show the detection algorithm
 import cv2
 import numpy as np
+import gc
 
 import FaceFeatureDetection, ModelFactory, ImageFeatureDraw, FeatureProcessing
 
@@ -45,7 +46,7 @@ while True:
             marks = FaceFeatureDetection.detect_marks(img, face, 'models/pose_model')
 
             # Draws all of the marks collected by the model on the image
-            # ImageFeatureDraw.draw_all_marks(img, marks);
+            ImageFeatureDraw.draw_all_marks(img, marks);
 
 
             image_points = np.array([
@@ -76,5 +77,6 @@ while True:
             break
     else:
         break
+    gc.collect()
 cv2.destroyAllWindows()
 cap.release()
