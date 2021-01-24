@@ -46,7 +46,7 @@ while True:
             marks = FaceFeatureDetection.detect_marks(img, face, 'models/pose_model')
 
             # Draws all of the marks collected by the model on the image
-            ImageFeatureDraw.draw_all_marks(img, marks);
+            ImageFeatureDraw.draw_all_marks(img, marks)
 
 
             image_points = np.array([
@@ -57,7 +57,7 @@ while True:
                 marks[48],  # Left Mouth corner
                 marks[54]   # Right mouth corner
             ], dtype="double")
-
+            print(marks[48], marks[54])
             # Not sure what solvePnP does
             dist_coeffs = np.zeros((4, 1))
             (success, rotation_vector, translation_vector) = cv2.solvePnP(model_points, image_points, camera_matrix,
