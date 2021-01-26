@@ -32,6 +32,7 @@ camera_matrix = np.array(
      [0, 0, 1]], dtype="double"
 )
 
+count = 0
 # Iterating through the image capture. Stop script by pressing q
 while True:
     ret, img = cap.read()
@@ -40,7 +41,14 @@ while True:
         faces = FaceFeatureDetection.find_faces(img, face_model)
         # Draws a bounding box around each face
         ImageFeatureDraw.draw_faces(img, faces)
+
+        # Variable init.
+        facial_ang_sum = {'x': 0, 'y': 0}
+        facial_pos_sum = {'x': 0, 'y': 0, 'x1': 0, 'y1': 0}
+        ITER = 5
         for face in faces:
+            count += 1
+
             # Returns an array of all the features. I'm not sure what all of them are other than the ones stored in image_points
             marks = FaceFeatureDetection.detect_marks(img, face, 'models/pose_model')
 
@@ -60,7 +68,7 @@ while True:
             # Not sure what solvePnP does
             dist_coeffs = np.zeros((4, 1))
             (success, rotation_vector, translation_vector) = cv2.solvePnP(model_points, image_points, camera_matrix,
-                                                                          dist_coeffs, flags=cv2.SOLVEPNP_UPNP)
+                                                                   dist_coeffs)  # flags=cv2.SOLVEPNP_UPNP
 
 
             x1, x2 = FaceFeatureDetection.head_pose_points(img, rotation_vector, translation_vector, camera_matrix)
@@ -68,8 +76,45 @@ while True:
             # Calculates the nose end point for the line.
             (x_angle, y_angle) = FeatureProcessing.get_look_angles(image_points[0], rotation_vector, translation_vector,
                                                                    camera_matrix, dist_coeffs, x1, x2)
+            for x, y, x1, y1 in faces:
+                # I got better results without averaging the landmarks
+                # But we can play around more
+                facial_pos_sum['x'] = x
+                facial_pos_sum['y'] = y
+                facial_pos_sum['x1'] = x1
+                facial_pos_sum['y1'] = y1
 
-            print(f'(x: {x_angle}, y: {y_angle})')
+            facial_ang_sum['x'] += x_angle
+            facial_ang_sum['y'] += y_angle
+            if count % ITER == 0:
+                # This seems redundant if we are not averaging, but I will leave
+                # for experimental purposes
+                x_loc_avg = facial_pos_sum['x']
+                y_loc_avg = facial_pos_sum['y']
+                x1_loc_avg = facial_pos_sum['x1']
+                y1_loc_avg = facial_pos_sum['y1']
+                x_ang_avg = facial_ang_sum['x']/ITER
+                y_ang_avg = facial_ang_sum['y']/ITER
+
+                x_ang_cond = x_ang_avg >= 5 or x_ang_avg <= -7
+                y_ang_cond = y_ang_avg >= 5 or y_ang_avg <= -5
+                x_pos_cond = not (size[1] / 4 < x_loc_avg <
+                                  size[1] / 2 < x1_loc_avg < 3 * size[1] / 4)
+                y_pos_cond = False  # checking for y seems useless for laptop cameras
+
+                flags = 0
+                if x_pos_cond or y_pos_cond:
+                    print("Wombo works best with your face horizontally centered")
+                    flags += 1
+                if x_ang_cond or y_ang_cond:
+                    print("Please look straight at the camera")
+                    flags += 1
+                if flags == 0:
+                    print("Congrats for being a decent human being")
+
+                # reset averages/sums
+                facial_ang_sum = {'x': 0, 'y': 0}
+                facial_pos_sum = {'x': 0, 'y': 0, 'x1': 0, 'y1': 0}
 
         cv2.imshow('img', img)
         if cv2.waitKey(1) & 0xFF == ord('q'):
