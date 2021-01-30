@@ -52,9 +52,9 @@ while(True):
         for i, (p1, p2) in enumerate(inner_points):
             if d_inner[i] + 2 < shape[p2][1] - shape[p1][1]:
                 cnt_inner += 1
-        if cnt_outer > 3 and cnt_inner > 2:
-            print('Mouth open')
-            cv2.putText(img, 'Mouth open', (30, 30), font,
+        if cnt_outer > 2.5 and cnt_inner > 2:
+            print('Wombo works best if you save that smile for after :)')
+            cv2.putText(img, 'Smiling', (30, 30), font,
                     1, (0, 255, 255), 2)
         # show the output image with the face detections + facial landmarks
     cv2.imshow("Output", img)
