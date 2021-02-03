@@ -61,7 +61,7 @@ while True:
             # Not sure what solvePnP does
             dist_coeffs = np.zeros((4, 1))
             (success, rotation_vector, translation_vector) = cv2.solvePnP(model_points, image_points, camera_matrix,
-                                                                          dist_coeffs, flags=cv2.SOLVEPNP_UPNP)
+                                                                          dist_coeffs)#, flags=cv2.SOLVEPNP_UPNP)
 
 
             x1, x2 = FaceFeatureDetection.head_pose_points(img, rotation_vector, translation_vector, camera_matrix)
