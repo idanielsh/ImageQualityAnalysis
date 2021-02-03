@@ -2,8 +2,6 @@ import cv2
 import tensorflow as tf
 import numpy as np
 
-import ModelFactory
-
 
 def find_faces(img, model):
     """
@@ -34,8 +32,7 @@ def find_faces(img, model):
             faces.append([x, y, x1, y1])
     return faces
 
-
-def detect_marks(img, face, model_loc):
+def detect_marks(img, face, model):
     """
     Find the facial landmarks in an image from the faces
 
@@ -43,8 +40,8 @@ def detect_marks(img, face, model_loc):
     ----------
     img : np.uint8
         The image in which landmarks are to be found
-    model_loc : str
-        Location of tensorflow model
+    model : Tensorflow model
+        Facial landmarks model
     face : list
         Face coordinates (x, y, x1, y1) in which the landmarks are to be found
 
@@ -54,7 +51,6 @@ def detect_marks(img, face, model_loc):
         facial landmark points
 
     """
-    model = ModelFactory.get_landmark_model(model_loc)
 
     offset_y = int(abs((face[3] - face[1]) * 0.1))
     box_moved = _move_box(face, [0, offset_y])

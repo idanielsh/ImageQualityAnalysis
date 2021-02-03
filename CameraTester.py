@@ -3,10 +3,13 @@ import cv2
 import numpy as np
 import gc
 
+
 import FaceFeatureDetection, ModelFactory, ImageFeatureDraw, FeatureProcessing
 
 face_model = ModelFactory.get_face_detector(modelFile="models/res10_300x300_ssd_iter_140000.caffemodel",
                                             configFile="models/deploy.prototxt")
+
+landmark_model = ModelFactory.get_landmark_model('models/pose_model')
 
 # Loads the video capture
 cap = cv2.VideoCapture(0)
@@ -33,6 +36,7 @@ camera_matrix = np.array(
      [0, 0, 1]], dtype="double"
 )
 
+
 count = 0
 # Iterating through the image capture. Stop script by pressing q
 while True:
@@ -51,7 +55,7 @@ while True:
             count += 1
 
             # Returns an array of all the features. I'm not sure what all of them are other than the ones stored in image_points
-            marks = FaceFeatureDetection.detect_marks(img, face, 'models/pose_model')
+            marks = FaceFeatureDetection.detect_marks(img, face, landmark_model)
 
             # Draws all of the marks collected by the model on the image
             ImageFeatureDraw.draw_all_marks(img, marks)

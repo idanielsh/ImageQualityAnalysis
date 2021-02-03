@@ -2,6 +2,7 @@ import cv2
 from tensorflow import keras
 
 
+
 def get_face_detector(modelFile=None,
                       configFile=None,
                       quantized=False):
