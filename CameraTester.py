@@ -117,7 +117,7 @@ while True:
                     feedback += "look straight at the camera, "
                     flags += 1
                 if flags == 0:
-                    feedback = "Congrats for being a decent human being!"
+                    feedback = "keep being an awesome human being!"
 
                 print(f'{count}. You have {flags}/{total_flags}. Please, {feedback}')
 
