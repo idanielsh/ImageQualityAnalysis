@@ -65,7 +65,7 @@ while True:
                 marks[30],  # Nose tip
                 marks[8],   # Chin
                 marks[36],  # Left eye left corner
-                marks[45],  # Right eye right corne
+                marks[45],  # Right eye right corner
                 marks[48],  # Left Mouth corner
                 marks[54]   # Right mouth corner
             ], dtype="double")
