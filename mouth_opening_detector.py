@@ -108,5 +108,8 @@ def open_mouth_detector(image) -> bool:
     else:
         return False
 
+
+
+
 my_img = cv2.imread("utsav-womboai.jpg")
 print(open_mouth_detector(my_img))

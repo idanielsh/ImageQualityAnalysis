@@ -69,7 +69,6 @@ while True:
                 marks[48],  # Left Mouth corner
                 marks[54]   # Right mouth corner
             ], dtype="double")
-            print(marks[48], marks[54])
             # Not sure what solvePnP does
             dist_coeffs = np.zeros((4, 1))
             (success, rotation_vector, translation_vector) = cv2.solvePnP(model_points, image_points, camera_matrix,
@@ -107,9 +106,13 @@ while True:
                                   size[1] / 2 < x1_loc_avg < 3 * size[1] / 4)
                 y_pos_cond = False  # checking for y seems useless for laptop cameras
 
+                mouth_open = FeatureProcessing.open_mouth_detector(marks)
                 flags = 0
                 total_flags = 3
                 feedback = ""
+                if mouth_open:
+                    feedback += "close your mouth, "
+                    flags += 1
                 if x_pos_cond or y_pos_cond:
                     feedback += "center your face, "
                     flags += 1
