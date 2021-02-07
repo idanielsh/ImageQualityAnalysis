@@ -108,14 +108,18 @@ while True:
                 y_pos_cond = False  # checking for y seems useless for laptop cameras
 
                 flags = 0
+                total_flags = 3
+                feedback = ""
                 if x_pos_cond or y_pos_cond:
-                    print("Wombo works best with your face horizontally centered")
+                    feedback += "center your face, "
                     flags += 1
                 if x_ang_cond or y_ang_cond:
-                    print("Please look straight at the camera")
+                    feedback += "look straight at the camera, "
                     flags += 1
                 if flags == 0:
-                    print("Congrats for being a decent human being")
+                    feedback = "Congrats for being a decent human being!"
+
+                print(f'{count}. You have {flags}/{total_flags}. Please, {feedback}')
 
                 # reset averages/sums
                 facial_ang_sum = {'x': 0, 'y': 0}
