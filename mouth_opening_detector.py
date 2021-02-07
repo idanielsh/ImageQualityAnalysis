@@ -102,8 +102,8 @@ def open_mouth_detector(image) -> bool:
     for i, (p1, p2) in enumerate(inner_points):
         if d_inner[i] + 2 < shape[p2][1] - shape[p1][1]:
             cnt_inner += 1
-    if cnt_outer > 2.5 and cnt_inner > 2:
-        print('Wombo works best if you save that smile for after :)')
+    #if cnt_outer > 2.5 and cnt_inner > 2: # Original that Utsav made
+    if cnt_outer > 2.75 and cnt_inner > 2.5:
         return True
     else:
         return False
@@ -111,5 +111,4 @@ def open_mouth_detector(image) -> bool:
 
 
 
-my_img = cv2.imread("utsav-womboai.jpg")
-print(open_mouth_detector(my_img))
+run_live()
