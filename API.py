@@ -1,7 +1,6 @@
 import cv2
 import numpy as np
-import FaceFeatureDetection, ModelFactory, ImageFeatureDraw, FeatureProcessing
-
+import FaceFeatureDetection, ModelFactory, FeatureProcessing
 
 # Face model to find faces in an image
 face_model = ModelFactory.get_face_detector(modelFile="models/res10_300x300_ssd_iter_140000.caffemodel",
@@ -19,8 +18,6 @@ model_points = np.array([
     (-150.0, -150.0, -125.0),  # Left Mouth corner
     (150.0, -150.0, -125.0)  # Right mouth corner
 ])
-
-
 
 
 def find_faces_faces(img):
@@ -59,11 +56,12 @@ def detect_marks(img, face):
         """
     return FaceFeatureDetection.detect_marks(img, face, landmark_model)
 
+
 def get_node_end_point(img, marks, camera_matrix):
     """
     Calculates an (x,y) tuple of where the user is looking on the screen.
 
-    :param img: The image The image in which the marks are to be found
+    :param img: The image in which the marks are to be found
     :param marks: facial landmark points
     :param camera_matrix: The camera matrix
     :return: (x, y) : tuple
@@ -80,14 +78,16 @@ def get_node_end_point(img, marks, camera_matrix):
 
     (success, rotation_vector, translation_vector) = cv2.solvePnP(model_points, image_points, np.zeros((4, 1)))
 
-
     return FaceFeatureDetection.head_pose_points(img, rotation_vector, translation_vector, camera_matrix)
 
 
 def get_glance_estimate(img, marks, camera_matrix):
     """
-
-    :return:
+    Returns the angle that the user is looking in degress
+    :param img: The image in which the marks are to be found
+    :param marks: facial landmark points
+    :param camera_matrix: The camera matrix
+    :return: an (x_angle, y_angle) tuple of the angle that the user is looking.
     """
     image_points = np.array([
         marks[30],  # Nose tip
@@ -100,9 +100,16 @@ def get_glance_estimate(img, marks, camera_matrix):
 
     (success, rotation_vector, translation_vector) = cv2.solvePnP(model_points, image_points, np.zeros((4, 1)))
 
-    (x,y) = FaceFeatureDetection.head_pose_points(img, rotation_vector, translation_vector, camera_matrix)
+    (x, y) = FaceFeatureDetection.head_pose_points(img, rotation_vector, translation_vector, camera_matrix)
 
-    FeatureProcessing.get_look_angles(marks[0], rotation_vector, translation_vector,
-                                      camera_matrix, np.zeros((4, 1)), x, y)
+    return FeatureProcessing.get_look_angles(marks[0], rotation_vector, translation_vector,
+                                             camera_matrix, np.zeros((4, 1)), x, y)
 
+def open_mouth_detector(marks):
+    """
+    Returns true if the mouth detected in the image is open (or smiling with teeth)
+    :param image: np.ndarray
+    :return: bool
+    """
 
+    return FeatureProcessing.open_mouth_detector(marks)

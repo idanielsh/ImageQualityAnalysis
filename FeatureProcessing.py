@@ -53,7 +53,6 @@ def open_mouth_detector(face_landmark_points) -> bool:
     d_inner = [0] * 3
 
 
-
     cnt_outer = 0
     cnt_inner = 0
     for i, (p1, p2) in enumerate(outer_points):
@@ -63,7 +62,6 @@ def open_mouth_detector(face_landmark_points) -> bool:
         if d_inner[i] + 2 < face_landmark_points[p2][1] - face_landmark_points[p1][1]:
             cnt_inner += 1
     if cnt_outer > 2.5 and cnt_inner > 2:
-        print('Wombo works best if you save that smile for after :)')
         return True
     else:
         return False
