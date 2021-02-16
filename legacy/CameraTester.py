@@ -3,8 +3,9 @@ import cv2
 import numpy as np
 import gc
 
-
-import FaceFeatureDetection, ModelFactory, ImageFeatureDraw, FeatureProcessing
+import ImageFeatureDraw
+from src.utils import FaceFeatureDetection, ModelFactory, FeatureProcessing
+from src import ImageAnalysisServices
 
 face_model = ModelFactory.get_face_detector(modelFile="models/res10_300x300_ssd_iter_140000.caffemodel",
                                             configFile="models/deploy.prototxt")
@@ -36,7 +37,6 @@ camera_matrix = np.array(
      [0, 0, 1]], dtype="double"
 )
 
-
 count = 0
 # Iterating through the image capture. Stop script by pressing q
 while True:
@@ -60,27 +60,24 @@ while True:
             # Draws all of the marks collected by the model on the image
             ImageFeatureDraw.draw_all_marks(img, marks)
 
-
             image_points = np.array([
                 marks[30],  # Nose tip
-                marks[8],   # Chin
+                marks[8],  # Chin
                 marks[36],  # Left eye left corner
-                marks[45],  # Right eye right corne
+                marks[45],  # Right eye right corner
                 marks[48],  # Left Mouth corner
-                marks[54]   # Right mouth corner
+                marks[54]  # Right mouth corner
             ], dtype="double")
-            print(marks[48], marks[54])
             # Not sure what solvePnP does
-            dist_coeffs = np.zeros((4, 1))
-            (success, rotation_vector, translation_vector) = cv2.solvePnP(model_points, image_points, camera_matrix,
-                                                                   dist_coeffs)  # flags=cv2.SOLVEPNP_UPNP
 
+            (success, rotation_vector, translation_vector) = cv2.solvePnP(model_points, image_points, camera_matrix,
+                                                                          np.zeros((4, 1)))  # flags=cv2.SOLVEPNP_UPNP
 
             x1, x2 = FaceFeatureDetection.head_pose_points(img, rotation_vector, translation_vector, camera_matrix)
 
             # Calculates the nose end point for the line.
             (x_angle, y_angle) = FeatureProcessing.get_look_angles(image_points[0], rotation_vector, translation_vector,
-                                                                   camera_matrix, dist_coeffs, x1, x2)
+                                                                   camera_matrix, np.zeros((4, 1)), x1, x2)
             for x, y, x1, y1 in faces:
                 # I got better results without averaging the landmarks
                 # But we can play around more
@@ -98,29 +95,37 @@ while True:
                 y_loc_avg = facial_pos_sum['y']
                 x1_loc_avg = facial_pos_sum['x1']
                 y1_loc_avg = facial_pos_sum['y1']
-                x_ang_avg = facial_ang_sum['x']/ITER
-                y_ang_avg = facial_ang_sum['y']/ITER
-
+                x_ang_avg = facial_ang_sum['x'] / ITER
+                y_ang_avg = facial_ang_sum['y'] / ITER
+                # print(x_ang_avg, y_ang_avg)
                 x_ang_cond = x_ang_avg >= 5 or x_ang_avg <= -7
                 y_ang_cond = y_ang_avg >= 5 or y_ang_avg <= -5
-                x_pos_cond = not (size[1] / 4 < x_loc_avg <
-                                  size[1] / 2 < x1_loc_avg < 3 * size[1] / 4)
+                x_pos_cond = not (size[1] / 4 < x_loc_avg < size[1] / 2 < x1_loc_avg < 3 * size[1] / 4)
                 y_pos_cond = False  # checking for y seems useless for laptop cameras
 
+                mouth_open = FeatureProcessing.open_mouth_detector(marks)
                 flags = 0
+                total_flags = 3
+                feedback = ""
+                if mouth_open:
+                    feedback += "close your mouth, "
+                    flags += 1
                 if x_pos_cond or y_pos_cond:
-                    print("Wombo works best with your face horizontally centered")
+                    feedback += "center your face, "
                     flags += 1
                 if x_ang_cond or y_ang_cond:
-                    print("Please look straight at the camera")
+                    feedback += "look straight at the camera, "
                     flags += 1
                 if flags == 0:
-                    print("Congrats for being a decent human being")
+                    feedback = "keep being an awesome human being!"
+
+                print(f'{count}. You have {flags}/{total_flags}. Please, {feedback}')
 
                 # reset averages/sums
                 facial_ang_sum = {'x': 0, 'y': 0}
                 facial_pos_sum = {'x': 0, 'y': 0, 'x1': 0, 'y1': 0}
 
+            print(ImageAnalysisServices.y_location(img, face))
         cv2.imshow('img', img)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
