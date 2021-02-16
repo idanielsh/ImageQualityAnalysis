@@ -3,8 +3,8 @@ import cv2
 import numpy as np
 import gc
 
-import ImageFeatureDraw
-from src.utils import FaceFeatureDetection, ModelFactory, FeatureProcessing
+from examples import image_feature_draw
+from src.utils import face_feature_detection, ModelFactory, feature_processing
 from src import ImageAnalysisServices
 
 face_model = ModelFactory.get_face_detector(modelFile="models/res10_300x300_ssd_iter_140000.caffemodel",
@@ -43,9 +43,9 @@ while True:
     ret, img = cap.read()
     if ret == True:
         # Faces is a list of tuples which are the bounding box of the detected face
-        faces = FaceFeatureDetection.find_faces(img, face_model)
+        faces = face_feature_detection.find_faces(img, face_model)
         # Draws a bounding box around each face
-        ImageFeatureDraw.draw_faces(img, faces)
+        image_feature_draw.draw_faces(img, faces)
 
         # Variable init.
         facial_ang_sum = {'x': 0, 'y': 0}
@@ -55,10 +55,10 @@ while True:
             count += 1
 
             # Returns an array of all the features. I'm not sure what all of them are other than the ones stored in image_points
-            marks = FaceFeatureDetection.detect_marks(img, face, landmark_model)
+            marks = face_feature_detection.detect_marks(img, face, landmark_model)
 
             # Draws all of the marks collected by the model on the image
-            ImageFeatureDraw.draw_all_marks(img, marks)
+            image_feature_draw.draw_all_marks(img, marks)
 
             image_points = np.array([
                 marks[30],  # Nose tip
@@ -73,11 +73,11 @@ while True:
             (success, rotation_vector, translation_vector) = cv2.solvePnP(model_points, image_points, camera_matrix,
                                                                           np.zeros((4, 1)))  # flags=cv2.SOLVEPNP_UPNP
 
-            x1, x2 = FaceFeatureDetection.head_pose_points(img, rotation_vector, translation_vector, camera_matrix)
+            x1, x2 = face_feature_detection.head_pose_points(img, rotation_vector, translation_vector, camera_matrix)
 
             # Calculates the nose end point for the line.
-            (x_angle, y_angle) = FeatureProcessing.get_look_angles(image_points[0], rotation_vector, translation_vector,
-                                                                   camera_matrix, np.zeros((4, 1)), x1, x2)
+            (x_angle, y_angle) = feature_processing.get_look_angles(image_points[0], rotation_vector, translation_vector,
+                                                                    camera_matrix, np.zeros((4, 1)), x1, x2)
             for x, y, x1, y1 in faces:
                 # I got better results without averaging the landmarks
                 # But we can play around more
@@ -103,7 +103,7 @@ while True:
                 x_pos_cond = not (size[1] / 4 < x_loc_avg < size[1] / 2 < x1_loc_avg < 3 * size[1] / 4)
                 y_pos_cond = False  # checking for y seems useless for laptop cameras
 
-                mouth_open = FeatureProcessing.open_mouth_detector(marks)
+                mouth_open = feature_processing.open_mouth_detector(marks)
                 flags = 0
                 total_flags = 3
                 feedback = ""

@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-from src.utils import FaceFeatureDetection, ModelFactory, FeatureProcessing
+from src.utils import face_feature_detection, ModelFactory, feature_processing
 
 # Face model to find faces in an image
 face_model = ModelFactory.get_face_detector(modelFile="models/res10_300x300_ssd_iter_140000.caffemodel",
@@ -34,7 +34,7 @@ def find_faces_faces(img):
         List of coordinates of the faces detected in the image
     :return:
     """
-    return FaceFeatureDetection.find_faces(img, face_model)
+    return face_feature_detection.find_faces(img, face_model)
 
 
 def detect_marks(img, face):
@@ -54,7 +54,7 @@ def detect_marks(img, face):
         facial landmark points
 
     """
-    return FaceFeatureDetection.detect_marks(img, face, landmark_model)
+    return face_feature_detection.detect_marks(img, face, landmark_model)
 
 
 def get_node_end_point(img, marks, camera_matrix):
@@ -78,7 +78,7 @@ def get_node_end_point(img, marks, camera_matrix):
 
     (success, rotation_vector, translation_vector) = cv2.solvePnP(model_points, image_points, np.zeros((4, 1)))
 
-    return FaceFeatureDetection.head_pose_points(img, rotation_vector, translation_vector, camera_matrix)
+    return face_feature_detection.head_pose_points(img, rotation_vector, translation_vector, camera_matrix)
 
 
 def get_glance_estimate(img, marks, camera_matrix):
@@ -100,10 +100,10 @@ def get_glance_estimate(img, marks, camera_matrix):
 
     (success, rotation_vector, translation_vector) = cv2.solvePnP(model_points, image_points, np.zeros((4, 1)))
 
-    (x, y) = FaceFeatureDetection.head_pose_points(img, rotation_vector, translation_vector, camera_matrix)
+    (x, y) = face_feature_detection.head_pose_points(img, rotation_vector, translation_vector, camera_matrix)
 
-    return FeatureProcessing.get_look_angles(marks[0], rotation_vector, translation_vector,
-                                             camera_matrix, np.zeros((4, 1)), x, y)
+    return feature_processing.get_look_angles(marks[0], rotation_vector, translation_vector,
+                                              camera_matrix, np.zeros((4, 1)), x, y)
 
 
 def open_mouth_detector(marks):
@@ -113,7 +113,7 @@ def open_mouth_detector(marks):
     :return: bool
     """
 
-    return FeatureProcessing.open_mouth_detector(marks)
+    return feature_processing.open_mouth_detector(marks)
 
 
 def x_location(img, face):
