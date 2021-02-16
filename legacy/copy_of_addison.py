@@ -15,7 +15,7 @@ import numpy as np
 modelFile = "models/res10_300x300_ssd_iter_140000.caffemodel"
 configFile = "models/deploy.prototxt"
 net = cv2.dnn.readNetFromCaffe(configFile, modelFile)
-img = cv2.imread('models/test.jpg')
+img = cv2.imread('../src/models/test.jpg')
 h, w = img.shape[:2]
 blob = cv2.dnn.blobFromImage(cv2.resize(img, (300, 300)), 1.0,
 (300, 300), (104.0, 117.0, 123.0))

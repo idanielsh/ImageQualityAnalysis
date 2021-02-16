@@ -3,7 +3,9 @@ import cv2
 import numpy as np
 import gc
 
-import FaceFeatureDetection, ModelFactory, ImageFeatureDraw, FeatureProcessing
+import ImageFeatureDraw
+from src.utils import FaceFeatureDetection, ModelFactory, FeatureProcessing
+from src import ImageAnalysisServices
 
 face_model = ModelFactory.get_face_detector(modelFile="models/res10_300x300_ssd_iter_140000.caffemodel",
                                             configFile="models/deploy.prototxt")
@@ -98,8 +100,7 @@ while True:
                 # print(x_ang_avg, y_ang_avg)
                 x_ang_cond = x_ang_avg >= 5 or x_ang_avg <= -7
                 y_ang_cond = y_ang_avg >= 5 or y_ang_avg <= -5
-                x_pos_cond = not (size[1] / 4 < x_loc_avg <
-                                  size[1] / 2 < x1_loc_avg < 3 * size[1] / 4)
+                x_pos_cond = not (size[1] / 4 < x_loc_avg < size[1] / 2 < x1_loc_avg < 3 * size[1] / 4)
                 y_pos_cond = False  # checking for y seems useless for laptop cameras
 
                 mouth_open = FeatureProcessing.open_mouth_detector(marks)
@@ -124,6 +125,7 @@ while True:
                 facial_ang_sum = {'x': 0, 'y': 0}
                 facial_pos_sum = {'x': 0, 'y': 0, 'x1': 0, 'y1': 0}
 
+            print(ImageAnalysisServices.y_location(img, face))
         cv2.imshow('img', img)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break

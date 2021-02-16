@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-import FaceFeatureDetection, ModelFactory, FeatureProcessing
+from src.utils import FaceFeatureDetection, ModelFactory, FeatureProcessing
 
 # Face model to find faces in an image
 face_model = ModelFactory.get_face_detector(modelFile="models/res10_300x300_ssd_iter_140000.caffemodel",
@@ -39,21 +39,21 @@ def find_faces_faces(img):
 
 def detect_marks(img, face):
     """
-        Find the facial landmarks in an image from the faces
+    Find the facial landmarks in an image from the faces
 
-        Parameters
-        ----------
-        img : np.uint8
-            The image in which landmarks are to be found
-        face : list
-            Face coordinates (x, y, x1, y1) in which the landmarks are to be found
+    Parameters
+    ----------
+    img : np.uint8
+        The image in which landmarks are to be found
+    face : list
+        Face coordinates (x, y, x1, y1) in which the landmarks are to be found
 
-        Returns
-        -------
-        marks : numpy array
-            facial landmark points
+    Returns
+    -------
+    marks : numpy array
+        facial landmark points
 
-        """
+    """
     return FaceFeatureDetection.detect_marks(img, face, landmark_model)
 
 
@@ -105,6 +105,7 @@ def get_glance_estimate(img, marks, camera_matrix):
     return FeatureProcessing.get_look_angles(marks[0], rotation_vector, translation_vector,
                                              camera_matrix, np.zeros((4, 1)), x, y)
 
+
 def open_mouth_detector(marks):
     """
     Returns true if the mouth detected in the image is open (or smiling with teeth)
@@ -113,3 +114,48 @@ def open_mouth_detector(marks):
     """
 
     return FeatureProcessing.open_mouth_detector(marks)
+
+
+def x_location(img, face):
+    """
+    Returns the relative x-location of the face to the center of the image.
+    -1 implies the face is on the very left side of the screen
+    0 implies the face is perfectly centered horizontally
+    1 implies the face is on the very right side of the screen
+
+    :param face: The face being assessed, a list of pixels (x0, y0, x1, y1)
+    :param img: The image being assessed
+    :return: a double as the relative position of the face
+    """
+
+    midpoint = (face[0] + face[2]) / 2
+    width = img.shape[1]
+
+    if midpoint < 0:
+        return -1
+    if midpoint > width:
+        return 1
+
+    return midpoint / (width / 2) - 1
+
+
+def y_location(img, face):
+    """
+    Returns the relative y-location of the face to the center of the image.
+    -1 implies the face is on the very bottom of the screen
+    0 implies the face is perfectly centered vertically
+    1 implies the face is on the very top side of the screen
+
+    :param face: The face being assessed, a list of pixels (x0, y0, x1, y1)
+    :param img: The image being assessed
+    :return: a double as the relative position of the face
+    """
+    midpoint = (face[1] + face[3]) / 2
+    height = img.shape[0]
+
+    if midpoint < 0:
+        return -1
+    if midpoint > height:
+        return 1
+
+    return 1 - midpoint / (height / 2)
