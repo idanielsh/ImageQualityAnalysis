@@ -23,22 +23,14 @@ def get_face_detector(modelFile=None,
     model : dnn_Net
     :param quantized:
     """
-    if quantized:
-        if modelFile is None:
-            modelFile = "models/opencv_face_detector_uint8.pb"
-        if configFile is None:
-            configFile = "models/opencv_face_detector.pbtxt"
-        model = cv2.dnn.readNetFromTensorflow(modelFile, configFile)
-
-    else:
-        if modelFile is None:
-            modelFile = "models/res10_300x300_ssd_iter_140000.caffemodel"
-        if configFile is None:
-            configFile = "models/deploy.prototxt"
-        model = cv2.dnn.readNetFromCaffe(configFile, modelFile)
+    if modelFile is None:
+        modelFile = "src/models/res10_300x300_ssd_iter_140000.caffemodel"
+    if configFile is None:
+        configFile = "src/models/deploy.prototxt"
+    model = cv2.dnn.readNetFromCaffe(configFile, modelFile)
     return model
 
-def get_landmark_model(saved_model='models/pose_model'):
+def get_landmark_model(saved_model='src/models/pose_model'):
     """
     Get the facial landmark model.
     Original repository: https://github.com/yinguobing/cnn-facial-landmark

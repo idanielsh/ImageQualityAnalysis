@@ -1,13 +1,13 @@
 import cv2
 import numpy as np
-from src.utils import face_feature_detection, ModelFactory, feature_processing
+from src.utils import face_feature_detection, model_factory, feature_processing
 
 # Face model to find faces in an image
-face_model = ModelFactory.get_face_detector(modelFile="models/res10_300x300_ssd_iter_140000.caffemodel",
-                                            configFile="models/deploy.prototxt")
+face_model = model_factory.get_face_detector(modelFile="src/models/res10_300x300_ssd_iter_140000.caffemodel",
+                                             configFile="src/models/deploy.prototxt")
 
 # Landmark model for figuring out where facial features are
-landmark_model = ModelFactory.get_landmark_model('models/pose_model')
+landmark_model = model_factory.get_landmark_model('src/models/pose_model')
 
 # 3D model locations of facial features relative to the nose
 model_points = np.array([
@@ -57,7 +57,7 @@ def detect_marks(img, face):
     return face_feature_detection.detect_marks(img, face, landmark_model)
 
 
-def get_node_end_point(img, marks, camera_matrix):
+def get_nose_end_point(img, marks, camera_matrix):
     """
     Calculates an (x,y) tuple of where the user is looking on the screen.
 
@@ -81,7 +81,7 @@ def get_node_end_point(img, marks, camera_matrix):
     return face_feature_detection.head_pose_points(img, rotation_vector, translation_vector, camera_matrix)
 
 
-def get_glance_estimate(img, marks, camera_matrix):
+def get_glance_angle_estimate(img, marks, camera_matrix):
     """
     Returns the angle that the user is looking in degress
     :param img: The image in which the marks are to be found
@@ -116,7 +116,7 @@ def open_mouth_detector(marks):
     return feature_processing.open_mouth_detector(marks)
 
 
-def x_location(img, face):
+def x_location(img, face) -> float:
     """
     Returns the relative x-location of the face to the center of the image.
     -1 implies the face is on the very left side of the screen
@@ -125,9 +125,8 @@ def x_location(img, face):
 
     :param face: The face being assessed, a list of pixels (x0, y0, x1, y1)
     :param img: The image being assessed
-    :return: a double as the relative position of the face
+    :return: a float as the relative position of the face
     """
-
     midpoint = (face[0] + face[2]) / 2
     width = img.shape[1]
 
@@ -139,16 +138,17 @@ def x_location(img, face):
     return midpoint / (width / 2) - 1
 
 
-def y_location(img, face):
+def y_location(img, face) -> float:
     """
     Returns the relative y-location of the face to the center of the image.
     -1 implies the face is on the very bottom of the screen
     0 implies the face is perfectly centered vertically
     1 implies the face is on the very top side of the screen
 
+    :rtype: float
     :param face: The face being assessed, a list of pixels (x0, y0, x1, y1)
     :param img: The image being assessed
-    :return: a double as the relative position of the face
+    :return: a float as the relative position of the face
     """
     midpoint = (face[1] + face[3]) / 2
     height = img.shape[0]
