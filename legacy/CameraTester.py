@@ -1,16 +1,14 @@
 # This class will launch your camera and show the detection algorithm
 import cv2
 import numpy as np
-import gc
 
 from examples import image_feature_draw
-from src.utils import face_feature_detection, ModelFactory, feature_processing
-from src import ImageAnalysisServices
+from src.utils import face_feature_detection, model_factory, feature_processing
 
-face_model = ModelFactory.get_face_detector(modelFile="models/res10_300x300_ssd_iter_140000.caffemodel",
-                                            configFile="models/deploy.prototxt")
+face_model = model_factory.get_face_detector(modelFile="src/models/res10_300x300_ssd_iter_140000.caffemodel",
+                                             configFile="src/models/deploy.prototxt")
 
-landmark_model = ModelFactory.get_landmark_model('models/pose_model')
+landmark_model = model_factory.get_landmark_model('src/models/pose_model')
 
 # Loads the video capture
 cap = cv2.VideoCapture(0)
@@ -125,12 +123,10 @@ while True:
                 facial_ang_sum = {'x': 0, 'y': 0}
                 facial_pos_sum = {'x': 0, 'y': 0, 'x1': 0, 'y1': 0}
 
-            print(ImageAnalysisServices.y_location(img, face))
         cv2.imshow('img', img)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
     else:
         break
-    gc.collect()
 cv2.destroyAllWindows()
 cap.release()
