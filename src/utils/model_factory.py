@@ -24,9 +24,9 @@ def get_face_detector(modelFile=None,
     :param quantized:
     """
     if modelFile is None:
-        modelFile = "src/models/res10_300x300_ssd_iter_140000.caffemodel"
+        modelFile = "./src/models/res10_300x300_ssd_iter_140000.caffemodel"
     if configFile is None:
-        configFile = "src/models/deploy.prototxt"
+        configFile = "./src/models/deploy.prototxt"
     model = cv2.dnn.readNetFromCaffe(configFile, modelFile)
     return model
 

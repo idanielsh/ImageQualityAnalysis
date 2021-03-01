@@ -21,6 +21,7 @@ camera_matrix = np.array(
      [0, img.shape[1], center[1]],
      [0, 0, 1]], dtype="double"
 )
+print('Press \'q\' to exit!')
 
 while True:
     # Captures a frame
@@ -44,11 +45,15 @@ while True:
             # Find if the mouth of the face is open
             mouth_open = image_analysis_services.open_mouth_detector(marks);
 
+            # Finds the endpoint of where the nose is looking
             (x,y) = image_analysis_services.get_nose_end_point(img, marks, camera_matrix)
 
+            # Finds the degrees of where the person is looking
             (x_deg, y_deg) = image_analysis_services.get_glance_angle_estimate(img, marks, camera_matrix);
 
-    cv2.imshow('img', img)
+
+
+    cv2.imshow('ImageQualityAnalysis', img)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 

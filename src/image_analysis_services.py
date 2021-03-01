@@ -3,11 +3,11 @@ import numpy as np
 from src.utils import face_feature_detection, model_factory, feature_processing
 
 # Face model to find faces in an image
-face_model = model_factory.get_face_detector(modelFile="src/models/res10_300x300_ssd_iter_140000.caffemodel",
-                                             configFile="src/models/deploy.prototxt")
+face_model = model_factory.get_face_detector(modelFile="../src/models/res10_300x300_ssd_iter_140000.caffemodel",
+                                             configFile="../src/models/deploy.prototxt")
 
 # Landmark model for figuring out where facial features are
-landmark_model = model_factory.get_landmark_model('src/models/pose_model')
+landmark_model = model_factory.get_landmark_model('../src/models/pose_model')
 
 # 3D model locations of facial features relative to the nose
 model_points = np.array([
@@ -76,7 +76,7 @@ def get_nose_end_point(img, marks, camera_matrix):
         marks[54]  # Right mouth corner
     ], dtype="double")
 
-    (success, rotation_vector, translation_vector) = cv2.solvePnP(model_points, image_points, np.zeros((4, 1)))
+    (success, rotation_vector, translation_vector) = cv2.solvePnP(model_points, image_points, camera_matrix, np.zeros((4, 1)))
 
     return face_feature_detection.head_pose_points(img, rotation_vector, translation_vector, camera_matrix)
 
@@ -98,7 +98,7 @@ def get_glance_angle_estimate(img, marks, camera_matrix):
         marks[54]  # Right mouth corner
     ], dtype="double")
 
-    (success, rotation_vector, translation_vector) = cv2.solvePnP(model_points, image_points, np.zeros((4, 1)))
+    (success, rotation_vector, translation_vector) = cv2.solvePnP(model_points, image_points, camera_matrix, np.zeros((4, 1)))
 
     (x, y) = face_feature_detection.head_pose_points(img, rotation_vector, translation_vector, camera_matrix)
 
