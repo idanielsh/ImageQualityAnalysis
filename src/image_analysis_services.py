@@ -102,8 +102,13 @@ def get_glance_angle_estimate(img, marks, camera_matrix):
 
     (x, y) = face_feature_detection.head_pose_points(img, rotation_vector, translation_vector, camera_matrix)
 
-    return feature_processing.get_look_angles(marks[0], rotation_vector, translation_vector,
-                                              camera_matrix, np.zeros((4, 1)), x, y)
+    rmat, jac = cv2.Rodrigues(rotation_vector)
+    angles, mtxR, mtxQ, Qx, Qy, Qz = cv2.RQDecomp3x3(rmat)
+
+    angles = (-angles[1], 180 - angles[0] if 0 < angles[0] else  -180 - angles[0])
+
+    return angles
+
 
 
 def open_mouth_detector(marks):

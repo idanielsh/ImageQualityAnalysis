@@ -23,6 +23,8 @@ camera_matrix = np.array(
 )
 print('Press \'q\' to exit!')
 
+frame = 0
+
 while True:
     # Captures a frame
     ret, img = cap.read()
@@ -51,11 +53,18 @@ while True:
             # Finds the degrees of where the person is looking
             (x_deg, y_deg) = image_analysis_services.get_glance_angle_estimate(img, marks, camera_matrix);
 
+            if frame % 25 == 0:
+                print(f'Frame: {frame}:')
+                print(f'    Face: {face}:')
+                print(f'    Face centered at {(x_position, y_postion)} relative to image center')
+                print(f'    Face glancing at angle: {(x_deg, y_deg)}')
+
 
 
     cv2.imshow('ImageQualityAnalysis', img)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
+    frame += 1
 
 cv2.destroyAllWindows()
 cap.release()
