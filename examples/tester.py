@@ -1,6 +1,8 @@
 import cv2
 import numpy as np
 
+
+
 # api for accessing program
 from src import image_analysis_services
 
@@ -53,6 +55,7 @@ while True:
             # Finds the degrees of where the person is looking
             (x_deg, y_deg) = image_analysis_services.get_glance_angle_estimate(img, marks, camera_matrix);
 
+            # Note that this algorithm only prints every 25 frames for clarity
             if frame % 25 == 0:
                 print(f'Frame: {frame}:')
                 print(f'    Face: {face}:')
