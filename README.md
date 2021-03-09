@@ -16,7 +16,7 @@
 * Tensorflow 2.2 **(Also important)**
 * Numpy
 * opencv-python
-##Installation
+## Installation
 After installing all dependencies run
 ```
 git clone https://github.com/idanielsh/ImageQualityAnalysis.git
@@ -34,5 +34,5 @@ the true performance of the app.
 
 ## Credits
 
-##Collaborators
+## Collaborators
 
