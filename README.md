@@ -29,6 +29,9 @@ After installing all dependencies run
 git clone https://github.com/idanielsh/ImageQualityAnalysis.git
 ```
 
+Import `src/image_analysis_services.py` at the top of the file which will give you access to all of the methods
+defined in the file.
+
 ## Example Starter Code
 Run the following file from your favourite IDE:
 ```
