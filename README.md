@@ -45,13 +45,13 @@ This project borrowed code from [this](https://towardsdatascience.com/real-time-
 TDS article by Vardan Agarwal. The reason we decided to make this project was to simplify the functions outlined above
 into a single project which can be used by users.
 
-We would also like to thank @KadenMc for being a great mentor throughout this development process. 
+We would also like to thank [@KadenMc](https://github.com/KadenMc) for being a great mentor throughout this development process. 
   
 
 ## Collaborators
 
 The project was created as the conclusion to the 2020 cohort of LeanAI hosted by [UofTAi](https://www.uoft.ai/).
 
-It was developed by @ushinghal19, @talicopanda, @oshalash38, @Addison-Weatherhead, and myself.
+It was developed by [@ushinghal19](https://github.com/ushinghal19), [@talicopanda](https://github.com/talicopanda), [@oshalash38](https://github.com/oshalash38), [@Addison-Weatherhead](https://github.com/Addison-Weatherhead), and myself.
 
 
