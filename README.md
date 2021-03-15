@@ -46,7 +46,7 @@ can detect multiple faces in a single frame.
 
 
 
-[![sample usage]()](examples/ImageQualityAnalysis.mp4) ]
+![sample usage]()](https://youtu.be/EfSWjtTTkSs)
 
 
 
