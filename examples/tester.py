@@ -1,8 +1,6 @@
 import cv2
 import numpy as np
 
-
-
 # api for accessing program
 from src import image_analysis_services
 
@@ -14,7 +12,6 @@ import image_feature_draw
 cap = cv2.VideoCapture(0)
 
 ret, img = cap.read()
-
 
 # Camera setup
 center = (img.shape[1] / 2, img.shape[0] / 2)
@@ -50,19 +47,31 @@ while True:
             mouth_open = image_analysis_services.open_mouth_detector(marks);
 
             # Finds the endpoint of where the nose is looking
-            (x,y) = image_analysis_services.get_nose_end_point(img, marks, camera_matrix)
+            (x, y) = image_analysis_services.get_nose_end_point(img, marks, camera_matrix)
 
             # Finds the degrees of where the person is looking
             (x_deg, y_deg) = image_analysis_services.get_glance_angle_estimate(img, marks, camera_matrix);
 
             # Note that this algorithm only prints every 25 frames for clarity
-            if frame % 25 == 0:
-                print(f'Frame: {frame}:')
-                print(f'    Face: {face}:')
-                print(f'    Face centered at {(x_position, y_postion)} relative to image center')
-                print(f'    Face glancing at angle: {(x_deg, y_deg)}')
 
+            dy = 1.2*cv2.getTextSize('aaaaaa', cv2.QT_FONT_NORMAL, 0.75, 1)[0][1]
 
+            cv2.putText(img, f'Face: {face}', (int((x_position + 1) * center[0]), int((1 - y_postion) * center[1])),
+                        cv2.QT_FONT_NORMAL, 0.75, (255, 255, 255))
+            cv2.putText(img, f' Face centered at {(round(x_position, 1), round(y_postion, 1))}',
+                        (int((x_position + 1) * center[0]), int((1 - y_postion) * center[1] + dy) ), cv2.QT_FONT_NORMAL,
+                        0.75, (255, 255, 255))
+            cv2.putText(img, f' Face glancing at angle: {(round(x_deg), round(y_deg))}',
+                        (int((x_position + 1) * center[0]), int((1 - y_postion) * center[1] + + 2 * dy) ),
+                        cv2.QT_FONT_NORMAL, 0.75, (255, 255, 255))
+            cv2.putText(img, ' Mouth: ' + ('open' if mouth_open else 'closed'),
+                        (int((x_position + 1) * center[0]), int((1 - y_postion) * center[1] + + 3 * dy)),
+                        cv2.QT_FONT_NORMAL, 0.75, (255, 255, 255))
+
+            # print()
+            # print(f'    Face: {face}:')
+            # print(f'    Face centered at {(x_position, y_postion)} relative to image center')
+            # print(f'    Face glancing at angle: {(x_deg, y_deg)}')
 
     cv2.imshow('ImageQualityAnalysis', img)
     if cv2.waitKey(1) & 0xFF == ord('q'):

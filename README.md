@@ -37,9 +37,8 @@ Run the following file from your favourite IDE:
 ```
 examples/tester.py
 ```
-And you should see the camera window launch with information about faces on the image. Note that the information is only
-printed every 25 seconds to maintain readability. This rate can be changed in `examples/tester.py` but does not reflect 
-the true performance of the app. 
+And you should see the camera window launch with information about faces on the image. Note that this tester file 
+can detect multiple faces in a single frame.
 
 
 ## Credits
