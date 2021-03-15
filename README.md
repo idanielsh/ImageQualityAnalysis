@@ -46,7 +46,7 @@ can detect multiple faces in a single frame.
 
 
 
-![sample usage](https://j.gifs.com/lxAZA5.gif)
+![sample usage](https://j.gifs.com/lxAZA5.gif) 
 
 
 
