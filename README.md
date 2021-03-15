@@ -43,7 +43,7 @@ To see sample usage of this project.
 Run the file and you should see the camera window launch with information about faces on the image. Note that this tester file 
 can detect multiple faces in a single frame.
 
-[![Sample Usage]()](https://user-images.githubusercontent.com/38260224/111096494-a6890a00-850d-11eb-9a4e-2b884beee96d.mp4)
+[![Sample Usage]](https://user-images.githubusercontent.com/38260224/111096494-a6890a00-850d-11eb-9a4e-2b884beee96d.mp4)
 
 ## Credits
 
@@ -56,7 +56,7 @@ We would also like to thank [@KadenMc](https://github.com/KadenMc) for being a g
 
 ## Collaborators
 
-The project was created as the conclusion to the 2020 cohort of LeanAI hosted by [UofTAi](https://www.uoft.ai/).
+The project was created as the conclusion to the 2020 cohort of LeanAI hosted by [UofTAI](https://www.uoft.ai/).
 
 It was developed by [@ushinghal19](https://github.com/ushinghal19), [@talicopanda](https://github.com/talicopanda), [@oshalash38](https://github.com/oshalash38), [@Addison-Weatherhead](https://github.com/Addison-Weatherhead), and myself.
 
