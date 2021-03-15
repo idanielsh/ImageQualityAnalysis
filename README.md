@@ -33,11 +33,13 @@ Import `src/image_analysis_services.py` at the top of the file which will give y
 defined in the file.
 
 ## Example Starter Code
-Run the following file from your favourite IDE:
+Open the following file from your favourite IDE:
 ```
 examples/tester.py
 ```
-And you should see the camera window launch with information about faces on the image. Note that this tester file 
+To see sample usage of this project.
+
+Run the file and you should see the camera window launch with information about faces on the image. Note that this tester file 
 can detect multiple faces in a single frame.
 
 
