@@ -43,7 +43,7 @@ To see sample usage of this project.
 Run the file and you should see the camera window launch with information about faces on the image. Note that this tester file 
 can detect multiple faces in a single frame.
 
-![caption](https://user-images.githubusercontent.com/38260224/111096494-a6890a00-850d-11eb-9a4e-2b884beee96d.mp4)
+[![Sample Usage]()](https://user-images.githubusercontent.com/38260224/111096494-a6890a00-850d-11eb-9a4e-2b884beee96d.mp4)
 
 ## Credits
 
