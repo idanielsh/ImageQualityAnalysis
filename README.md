@@ -46,7 +46,7 @@ can detect multiple faces in a single frame.
 
 
 
-![sample usage]()](https://youtu.be/EfSWjtTTkSs)
+![sample usage](https://youtu.be/EfSWjtTTkSs)
 
 
 
