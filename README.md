@@ -45,7 +45,7 @@ can detect multiple faces in a single frame.
 
 
 
-![sample usage](https://user-images.githubusercontent.com/38260224/111097086-d71d7380-850e-11eb-9ed1-6d578ac920d1.gif)
+![sample usage](https://user-images.githubusercontent.com/38260224/111097086-d71d7380-850e-11eb-9ed1-6d578ac920d1.mp4)
 
 
 
